@@ -1,0 +1,44 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  locale: fr_FR.UTF-8
+  keyboard:
+    layout: fr
+    variant: latin9
+
+  identity:
+    hostname: cicdserv
+    username: deploy
+    password: password123
+
+  ssh:
+    install-server: true
+    authorized-keys: []
+    allow-pw: true
+
+  storage:
+    layout:
+      name: lvm
+    swap:
+      size: 0
+
+  network:
+    network:
+      version: 2
+      ethernets:
+        ens33:
+          dhcp4: true
+
+  packages:
+    - net-tools
+    - curl
+    - vim
+    - htop
+
+  late-commands:
+    - curtin in-target --target=/target apt update
+    - curtin in-target --target=/target apt install -y qemu-guest-agent
+
+  user-data:
+    timezone: Europe/Paris
